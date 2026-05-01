@@ -58,35 +58,113 @@ add_action( 'init', 'westflush_register_cpts' );
 
 
 /**
- * Hero Carousel — Customizer Settings
- * Dashboard > Appearance > Customize > Hero Carousel Images
+ * Hero Carousel — Dashboard Admin Page
+ * Dashboard > Hero Carousel
  */
-function westflush_customize_register( $wp_customize ) {
-    $wp_customize->add_section( 'westflush_hero_slides', array(
-        'title'    => 'Hero Carousel Images',
-        'priority' => 30,
-    ) );
+function westflush_carousel_menu() {
+    add_menu_page(
+        __( 'Hero Carousel', 'westflush' ),
+        __( 'Hero Carousel', 'westflush' ),
+        'manage_options',
+        'westflush-carousel',
+        'westflush_carousel_admin_page',
+        'dashicons-format-gallery',
+        25
+    );
+}
+add_action( 'admin_menu', 'westflush_carousel_menu' );
 
-    $slides = array(
+function westflush_carousel_settings_init() {
+    register_setting( 'westflush_carousel_group', 'westflush_hero_slides', array(
+        'sanitize_callback' => 'westflush_sanitize_slides',
+    ) );
+}
+add_action( 'admin_init', 'westflush_carousel_settings_init' );
+
+function westflush_sanitize_slides( $input ) {
+    $clean = array();
+    if ( is_array( $input ) ) {
+        foreach ( $input as $key => $val ) {
+            $clean[ (int) $key ] = absint( $val );
+        }
+    }
+    return $clean;
+}
+
+function westflush_carousel_enqueue( $hook ) {
+    if ( 'toplevel_page_westflush-carousel' !== $hook ) return;
+    wp_enqueue_media();
+    wp_enqueue_script(
+        'westflush-carousel-admin',
+        get_stylesheet_directory_uri() . '/js/carousel-admin.js',
+        array( 'jquery' ),
+        wp_get_theme()->get( 'Version' ),
+        true
+    );
+}
+add_action( 'admin_enqueue_scripts', 'westflush_carousel_enqueue' );
+
+function westflush_carousel_admin_page() {
+    if ( ! current_user_can( 'manage_options' ) ) return;
+
+    $saved  = get_option( 'westflush_hero_slides', array() );
+    $labels = array(
         1 => 'Slide 1 — Professional Cleaning',
-        2 => 'Slide 2 — Fumigation Services',
+        2 => 'Slide 2 — Certified Fumigation',
         3 => 'Slide 3 — Same-Day Booking',
     );
+    ?>
+    <div class="wrap">
+        <h1><?php esc_html_e( 'Hero Carousel Images', 'westflush' ); ?></h1>
+        <p style="color:#555;">Upload photos for the homepage hero carousel. Recommended: <strong>800 × 420 px</strong> or larger (landscape).</p>
 
-    foreach ( $slides as $i => $label ) {
-        $wp_customize->add_setting( "hero_slide_{$i}_image", array(
-            'default'           => 0,
-            'transport'         => 'refresh',
-            'sanitize_callback' => 'absint',
-        ) );
-        $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, "hero_slide_{$i}_image", array(
-            'label'     => $label,
-            'section'   => 'westflush_hero_slides',
-            'mime_type' => 'image',
-        ) ) );
-    }
+        <?php if ( isset( $_GET['settings-updated'] ) ) : ?>
+            <div class="notice notice-success is-dismissible"><p><strong>Carousel images saved successfully!</strong></p></div>
+        <?php endif; ?>
+
+        <form method="post" action="options.php">
+            <?php settings_fields( 'westflush_carousel_group' ); ?>
+            <table class="form-table" style="max-width:720px;">
+                <?php foreach ( $labels as $i => $label ) :
+                    $img_id  = isset( $saved[ $i ] ) ? (int) $saved[ $i ] : 0;
+                    $img_src = $img_id ? wp_get_attachment_image_url( $img_id, 'medium' ) : '';
+                ?>
+                <tr style="border-bottom:1px solid #eee;">
+                    <th scope="row" style="width:210px;vertical-align:top;padding-top:18px;">
+                        <?php echo esc_html( $label ); ?>
+                    </th>
+                    <td style="padding-bottom:20px;">
+                        <div class="wf-slide-row" style="display:flex;align-items:flex-start;gap:20px;">
+                            <div class="wf-preview" style="width:190px;height:115px;background:#f0f0f0;border:2px dashed #bbb;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <?php if ( $img_src ) : ?>
+                                    <img src="<?php echo esc_url( $img_src ); ?>" style="width:100%;height:100%;object-fit:cover;">
+                                <?php else : ?>
+                                    <span style="color:#999;font-size:11px;text-align:center;line-height:1.6;">No image<br>selected</span>
+                                <?php endif; ?>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:10px;padding-top:10px;">
+                                <input type="hidden"
+                                    name="westflush_hero_slides[<?php echo $i; ?>]"
+                                    value="<?php echo esc_attr( $img_id ? $img_id : '' ); ?>"
+                                    class="wf-img-id">
+                                <button type="button" class="button button-primary wf-upload">
+                                    <?php echo $img_id ? 'Change Image' : 'Upload / Select Image'; ?>
+                                </button>
+                                <button type="button" class="button wf-remove"
+                                    style="color:#cc0000;<?php echo $img_id ? '' : 'display:none;'; ?>">
+                                    &#10005; Remove Image
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </table>
+            <?php submit_button( 'Save Carousel Images' ); ?>
+        </form>
+    </div>
+    <?php
 }
-add_action( 'customize_register', 'westflush_customize_register' );
 
 
 /**

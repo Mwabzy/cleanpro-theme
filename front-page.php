@@ -67,8 +67,10 @@
       <div class="hero-carousel">
         <div class="carousel-track">
 
-          <?php foreach ( $hero_slides as $i => $slide ) :
-            $img_id  = (int) get_theme_mod( "hero_slide_{$i}_image", 0 );
+          <?php
+            $carousel_imgs = get_option( 'westflush_hero_slides', array() );
+            foreach ( $hero_slides as $i => $slide ) :
+            $img_id  = isset( $carousel_imgs[ $i ] ) ? (int) $carousel_imgs[ $i ] : 0;
             $img_url = $img_id ? wp_get_attachment_image_url( $img_id, 'large' ) : '';
             if ( $img_url ) {
               $bg_style = 'background-image: url(\'' . esc_url( $img_url ) . '\'); background-size: cover; background-position: center;';
