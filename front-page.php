@@ -68,15 +68,16 @@
         <div class="carousel-track">
 
           <?php foreach ( $hero_slides as $i => $slide ) :
-            $img = get_theme_mod( "hero_slide_{$i}_image", '' );
-            if ( $img ) {
-              $bg_style = 'background-image: url(\'' . esc_url( $img ) . '\'); background-size: cover; background-position: center;';
+            $img_id  = (int) get_theme_mod( "hero_slide_{$i}_image", 0 );
+            $img_url = $img_id ? wp_get_attachment_image_url( $img_id, 'large' ) : '';
+            if ( $img_url ) {
+              $bg_style = 'background-image: url(\'' . esc_url( $img_url ) . '\'); background-size: cover; background-position: center;';
             } else {
               $bg_style = 'background: ' . $slide['fallback'] . ';';
             }
           ?>
           <div class="carousel-slide" style="<?php echo $bg_style; ?>">
-            <?php if ( ! $img ) : ?>
+            <?php if ( ! $img_url ) : ?>
             <div class="slide-visual"><?php echo $slide['icon']; ?></div>
             <?php endif; ?>
             <div class="slide-content">

@@ -7,7 +7,12 @@ function westflush_setup() {
     add_theme_support( 'title-tag' );
     add_theme_support( 'post-thumbnails' );
     add_theme_support( 'html5', [ 'search-form', 'comment-form', 'comment-list', 'gallery', 'caption' ] );
-    add_theme_support( 'custom-logo' );
+    add_theme_support( 'custom-logo', array(
+        'height'      => 80,
+        'width'       => 300,
+        'flex-height' => true,
+        'flex-width'  => true,
+    ) );
 
     register_nav_menus( [
         'primary' => __( 'Primary Menu', 'westflush' ),
@@ -70,13 +75,14 @@ function westflush_customize_register( $wp_customize ) {
 
     foreach ( $slides as $i => $label ) {
         $wp_customize->add_setting( "hero_slide_{$i}_image", array(
-            'default'           => '',
+            'default'           => 0,
             'transport'         => 'refresh',
-            'sanitize_callback' => 'esc_url_raw',
+            'sanitize_callback' => 'absint',
         ) );
-        $wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, "hero_slide_{$i}_image", array(
-            'label'   => $label,
-            'section' => 'westflush_hero_slides',
+        $wp_customize->add_control( new WP_Customize_Media_Control( $wp_customize, "hero_slide_{$i}_image", array(
+            'label'     => $label,
+            'section'   => 'westflush_hero_slides',
+            'mime_type' => 'image',
         ) ) );
     }
 }
