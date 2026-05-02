@@ -535,31 +535,36 @@
       <div class="pest-card">
         <div class="pest-icon">&#x1F40D;</div>
         <h4>Snakes</h4>
-        <div class="pest-price">KES 4,500</div>
+        <div class="pest-price">KES 4,500 &ndash; 25,000</div>
+        <div class="pest-price-note">Based on property size</div>
       </div>
 
       <div class="pest-card">
         <div class="pest-icon">&#x1F40C;</div>
         <h4>Snails</h4>
-        <div class="pest-price">KES 3,000</div>
+        <div class="pest-price">KES 3,000 &ndash; 15,000</div>
+        <div class="pest-price-note">Based on property size</div>
       </div>
 
       <div class="pest-card">
         <div class="pest-icon">&#x1F41C;</div>
         <h4>Termites</h4>
-        <div class="pest-price">KES 7,000</div>
+        <div class="pest-price">KES 7,500 &ndash; 35,000</div>
+        <div class="pest-price-note">Based on property size</div>
       </div>
 
       <div class="pest-card">
         <div class="pest-icon">&#x1F400;</div>
         <h4>Rodents</h4>
-        <div class="pest-price">KES 2,500</div>
+        <div class="pest-price">KES 2,500 &ndash; 35,000</div>
+        <div class="pest-price-note">Based on property size</div>
       </div>
 
       <div class="pest-card">
         <div class="pest-icon">&#x1F987;</div>
         <h4>Bats</h4>
-        <div class="pest-price">KES 7,500</div>
+        <div class="pest-price">KES 7,500 &ndash; 30,000</div>
+        <div class="pest-price-note">Based on property size</div>
       </div>
 
     </div><!-- .fumi-pests -->

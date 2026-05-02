@@ -851,6 +851,11 @@ section { padding: 72px 0; }
   font-weight: 800;
   color: var(--teal);
 }
+.pest-card .pest-price-note {
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 3px;
+}
 
 /* ── WHY US ── */
 .why-section { background: linear-gradient(135deg, var(--dark), #1a3a6b); color: var(--white); }
