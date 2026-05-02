@@ -412,7 +412,7 @@
 
       <?php
         $video_urls = array(
-          get_theme_mod( 'video_1_url', '' ),
+          get_theme_mod( 'video_1_url', 'https://vimeo.com/1188608377' ),
           get_theme_mod( 'video_2_url', '' ),
           get_theme_mod( 'video_3_url', '' ),
         );
@@ -423,17 +423,24 @@
 
         <?php foreach ( $video_urls as $url ) :
           if ( ! $url ) continue;
-          $embed_url = preg_replace(
-            '/^.*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#&?]*).*$/i',
-            'https://www.youtube.com/embed/$1',
-            esc_url( $url )
-          );
+
+          if ( preg_match( '/vimeo\.com\/(\d+)/', $url, $vm ) ) {
+            $embed_url  = 'https://player.vimeo.com/video/' . $vm[1] . '?title=0&byline=0&portrait=0';
+            $allow_attr = 'autoplay; fullscreen; picture-in-picture';
+          } else {
+            $embed_url = preg_replace(
+              '/^.*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#&?]*).*$/i',
+              'https://www.youtube.com/embed/$1',
+              esc_url( $url )
+            );
+            $allow_attr = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+          }
         ?>
         <div class="video-wrap">
-          <iframe src="<?php echo $embed_url; ?>"
+          <iframe src="<?php echo esc_url( $embed_url ); ?>"
             title="WestFlush Services Video"
             frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="<?php echo esc_attr( $allow_attr ); ?>"
             allowfullscreen>
           </iframe>
         </div>
@@ -444,7 +451,7 @@
         <div class="video-placeholder">
           <div class="vp-icon">&#x25B6;</div>
           <p>Videos coming soon</p>
-          <small>Add YouTube video URLs via Appearance &rarr; Customize &rarr; Video Showcase</small>
+          <small>Add video URLs via Appearance &rarr; Customize &rarr; Video Showcase</small>
         </div>
 
       <?php endif; ?>
@@ -711,7 +718,7 @@
             <div class="ci-icon">&#9200;</div>
             <div>
               <strong>Working Hours</strong>
-              <span>Mon &ndash; Sat: 7:30 AM &ndash; 7:30 PM</span>
+              <span>24 Hours Available, 7 Days a Week</span>
             </div>
           </div>
         </div>

@@ -67,19 +67,21 @@ document.addEventListener('DOMContentLoaded', function () {
   if (contactForm) {
     contactForm.addEventListener('submit', function (e) {
       e.preventDefault();
-      const btn = contactForm.querySelector('button[type="submit"]');
-      const original = btn.textContent;
-      btn.textContent = 'Sending...';
-      btn.disabled = true;
+      var name     = contactForm.querySelector('[name="name"]').value.trim();
+      var phone    = contactForm.querySelector('[name="phone"]').value.trim();
+      var service  = contactForm.querySelector('[name="service"]').value.trim();
+      var location = contactForm.querySelector('[name="location"]').value.trim();
+      var message  = contactForm.querySelector('[name="message"]').value.trim();
 
-      setTimeout(function () {
-        btn.textContent = '✓ Message Sent!';
-        setTimeout(function () {
-          btn.textContent = original;
-          btn.disabled = false;
-          contactForm.reset();
-        }, 3000);
-      }, 1200);
+      var text = 'Hello WestFlush! I would like to make an enquiry.\n\n'
+        + 'Name: ' + name + '\n'
+        + 'Phone: ' + phone + '\n'
+        + 'Service: ' + service + '\n'
+        + 'Location: ' + location + '\n'
+        + (message ? 'Details: ' + message : '');
+
+      window.open('https://wa.me/254721885666?text=' + encodeURIComponent(text), '_blank');
+      contactForm.reset();
     });
   }
 
@@ -154,20 +156,22 @@ document.addEventListener('DOMContentLoaded', function () {
     if (modalForm) {
       modalForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        const btn = modalForm.querySelector('button[type="submit"]');
-        const original = btn.innerHTML;
-        btn.textContent = 'Sending...';
-        btn.disabled = true;
+        var name     = modalForm.querySelector('[name="name"]').value.trim();
+        var phone    = modalForm.querySelector('[name="phone"]').value.trim();
+        var service  = modalForm.querySelector('[name="service"]').value.trim();
+        var location = modalForm.querySelector('[name="location"]').value.trim();
+        var message  = modalForm.querySelector('[name="message"]').value.trim();
 
-        setTimeout(function () {
-          btn.innerHTML = '&#10003; Enquiry Sent!';
-          setTimeout(function () {
-            btn.innerHTML = original;
-            btn.disabled = false;
-            modalForm.reset();
-            closeModal();
-          }, 3000);
-        }, 1200);
+        var text = 'Hello WestFlush! I would like to make an enquiry.\n\n'
+          + 'Name: ' + name + '\n'
+          + 'Phone: ' + phone + '\n'
+          + 'Service: ' + service + '\n'
+          + 'Location: ' + location + '\n'
+          + (message ? 'Details: ' + message : '');
+
+        window.open('https://wa.me/254721885666?text=' + encodeURIComponent(text), '_blank');
+        modalForm.reset();
+        closeModal();
       });
     }
   }
